@@ -18,8 +18,8 @@ func (s ShaderProgram) End() {
 }
 
 func NewShaderProgram(vertexShaderSource, fragmentShaderSource string) ShaderProgram {
-	vertexShader := compileShader(vertexShaderSource, gl.VERTEX_SHADER)
-	fragmentShader := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
+	vertexShader := compileShader(ReadShaderFile(vertexShaderSource) + "\x00", gl.VERTEX_SHADER)
+	fragmentShader := compileShader(ReadShaderFile(fragmentShaderSource)+ "\x00", gl.FRAGMENT_SHADER)
 	program := gl.CreateProgram()
 
 	gl.AttachShader(program, vertexShader)
