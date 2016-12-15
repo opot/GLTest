@@ -1,10 +1,10 @@
-package utils 
+package graphics
 
 import (
 	"fmt"
-	"strings"
+	"github.com/go-gl/gl/v4.5-core/gl"
 	"io/ioutil"
-	"github.com/go-gl/gl/v4.5-core/gl"	
+	"strings"
 )
 
 type ShaderProgram uint32
@@ -17,7 +17,7 @@ func (s ShaderProgram) End() {
 	gl.UseProgram(uint32(0))
 }
 
-func NewProgram(vertexShaderSource, fragmentShaderSource string) ShaderProgram {
+func NewShaderProgram(vertexShaderSource, fragmentShaderSource string) ShaderProgram {
 	vertexShader := compileShader(vertexShaderSource, gl.VERTEX_SHADER)
 	fragmentShader := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
 	program := gl.CreateProgram()
@@ -50,7 +50,7 @@ func compileShader(source string, shaderType uint32) uint32 {
 	csources, free := gl.Strs(source)
 	gl.ShaderSource(shader, 1, csources, nil)
 	free()
-	
+
 	gl.CompileShader(shader)
 	var status int32
 	gl.GetShaderiv(shader, gl.COMPILE_STATUS, &status)
@@ -63,16 +63,16 @@ func compileShader(source string, shaderType uint32) uint32 {
 
 		panic(fmt.Sprintf("failed to compile %v: %v", source, log))
 	}
-	
+
 	return shader
 }
 
 func ReadShaderFile(name string) string {
-	dat, err := ioutil.ReadFile(name)	
+	dat, err := ioutil.ReadFile(name)
 	if err != nil {
 		panic(err)
 	}
-	
+
 	return string(dat)
-	
+
 }
