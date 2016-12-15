@@ -20,8 +20,9 @@ func init() {
 
 func main() {
 	program := graphics.NewGlfwProgram("World", WIDTH, HEIGHT, draw, update)
+	defer program.Terminate()
 
-	sh = graphics.NewShaderProgram(graphics.ReadShaderFile("assets/shader/vert.glsl") + "\x00", graphics.ReadShaderFile("assets/shader/frag.glsl") + "\x00")
+	sh = graphics.NewShaderProgram("assets/shader/vert.glsl", "assets/shader/frag.glsl")
 
 	cube = utils.GenCube(1)
 	tex = graphics.GetTexture("assets/texture/cube.png")
@@ -69,7 +70,7 @@ var(
 )
 
 func update(delta float32){
-	angle += delta * 2 * 3.14
+	angle += delta
 }
 
 func draw(){
@@ -94,7 +95,7 @@ func draw(){
 
 func rotate(angle float32) mgl32.Mat4 {
 
-	rotate := mgl32.HomogRotate3D(angle, mgl32.Vec3{0, 1, 0})
+	rotate := mgl32.HomogRotate3D(angle * 3.14, mgl32.Vec3{0, 1, 0})
 	return rotate
 	//return mgl32.HomogRotate3DX(0.75).Mul4(rotate)
 }

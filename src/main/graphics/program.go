@@ -18,7 +18,6 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 	if err != nil {
 		panic(err)
 	}
-	defer glfw.Terminate()
 
 	glfw.WindowHint(glfw.Resizable, glfw.False)
 	glfw.WindowHint(glfw.ContextVersionMajor, 4)
@@ -39,10 +38,14 @@ func NewGlfwProgram(title string, width, height int, draw func(), update func(de
 	return Program{Window, draw, update, time.Now()}
 }
 
+func (program *Program) Terminate() {
+	glfw.Terminate()
+}
+
 func (program *Program) Update(){
-	program.update(float32(time.Now().Sub(program.last).Nanoseconds())/100000000.0)
+	program.update(float32(time.Now().Sub(program.last).Nanoseconds())/1000000000.0)
+	program.last = time.Now()
 	program.draw()
 	program.Window.SwapBuffers()
 	glfw.PollEvents()
-	program.last = time.Now()
 }
